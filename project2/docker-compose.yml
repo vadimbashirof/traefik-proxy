@@ -18,8 +18,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.project-2.rule=Host(`${PROJECT_2_HOST}`)"
-    env_file:
-      - "/home/vajasana/Develop/developments/proxy-server/traefik/.env"
     networks:
       - front
 
