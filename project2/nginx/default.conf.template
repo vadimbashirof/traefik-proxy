@@ -1,0 +1,14 @@
+server {
+listen 80;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+
+    index index.html;
+
+    root /var/www;
+
+    location / {
+        # try to serve file directly, fallback to front controller
+        try_files $uri $uri/ =404;
+    }
+}

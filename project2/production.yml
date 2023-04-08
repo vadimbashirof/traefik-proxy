@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+
+  # Nginx
+  project-2:
+    image: nginx:latest
+    container_name: 'project-2-nginx'
+    restart: unless-stopped
+    ports:
+      - '${PROJECT_2_PORT}:80'
+    environment:
+      NGINX_PORT: '80'
+      NGINX_HOST: 'localhost'
+    volumes:
+      - './:/var/www'
+      - './nginx:/etc/nginx/templates'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.project-2.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.project-2.entrypoints=websecure"
+      - "traefik.http.routers.project-2.tls.certresolver=myresolver"
+
+      - "traefik.http.routers.project-2.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${BASE_AUTH}"
+    networks:
+      - front
+
+networks:
+  front:
+    external:
+      name: traefik_default
