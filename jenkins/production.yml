@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  jenkins:
+    build:
+      context: ./
+      args:
+        HOST_UID: ${HOST_UID}
+        HOST_GID: ${HOST_GID}
+    restart: unless-stopped
+    container_name: jenkins
+    volumes:
+      - ./src:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jenkins.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.jenkins.entrypoints=websecure"
+      - "traefik.http.routers.jenkins.tls.certresolver=myresolver"
+    networks:
+      - front
+
+networks:
+  front:
+    external:
+      name: traefik_default
